@@ -13,6 +13,30 @@ class TaskDetailScreen extends StatelessWidget {
     return '$day/$month/$year';
   }
 
+  /// Devuelve el color asociado a cada estado.
+  Color _statusColor(TaskStatus status) {
+    switch (status) {
+      case TaskStatus.todo:
+        return const Color(0xFF6C63FF);
+      case TaskStatus.inProgress:
+        return const Color(0xFFFFA726);
+      case TaskStatus.done:
+        return const Color(0xFF66BB6A);
+    }
+  }
+
+  /// Devuelve el icono asociado a cada estado.
+  IconData _statusIcon(TaskStatus status) {
+    switch (status) {
+      case TaskStatus.todo:
+        return Icons.radio_button_unchecked;
+      case TaskStatus.inProgress:
+        return Icons.timelapse;
+      case TaskStatus.done:
+        return Icons.check_circle;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,6 +102,19 @@ class TaskDetailScreen extends StatelessWidget {
                 ],
               ),
             ),
+            const SizedBox(height: 24),
+
+            // Estado de la tarea
+            const Text(
+              'Estado',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.black54,
+              ),
+            ),
+            const SizedBox(height: 12),
+            _buildStatusBadge(),
             const SizedBox(height: 24),
             
             // Dates Section
@@ -182,6 +219,34 @@ class TaskDetailScreen extends StatelessWidget {
               ),
           ],
         ),
+      ),
+    );
+  }
+
+  /// Badge visual que muestra el estado actual de la tarea.
+  Widget _buildStatusBadge() {
+    final Color color = _statusColor(task.estado);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.12),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withOpacity(0.3)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(_statusIcon(task.estado), color: color, size: 20),
+          const SizedBox(width: 8),
+          Text(
+            task.estado.label,
+            style: TextStyle(
+              color: color,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+        ],
       ),
     );
   }
